@@ -26,7 +26,7 @@ onMounted(() => {
 img {
     opacity: 0;
     transition: all var(--lazyload-duration, .4s) var(--lazyload-easing, ease);
-    &.loaded {
+    &[data-ll-status="loaded"] {
         opacity: 1;
     }
 }
