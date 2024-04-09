@@ -66,7 +66,6 @@ const state: State = reactive({
 
 const onHandleFocus = (evt: any) => {
     isTyping.value = true
-    evt.target.reportValidity()
     // We want to report validity the native way when the user is typing
     if (validationMessage.value) {
         validationMessage.value = undefined
@@ -81,6 +80,7 @@ const onHandleInput = (evt: any) => {
 
 const onHandleBlur = (evt: any) => {
     isTyping.value = false
+    evt.target.reportValidity()
     // We want to add non-native validation report when not typing
     if (! evt.target.checkValidity()) {
         validationMessage.value = evt.target.validationMessage
