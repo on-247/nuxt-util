@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, computed, reactive} from 'vue';
+import {ref, computed, reactive, watch, onBeforeUnmount} from 'vue';
 
 import Indicator from './Indicator.vue';
 import Label from './Label.vue'
