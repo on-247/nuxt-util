@@ -20,6 +20,8 @@
 - `--form-button-border-color: #000;`
 - `--form-button-color: #fff;`
 
+- `--form-indicator-border-color: #000;`
+- `--form-indicator-border-color-checked: #000;`
 - `--form-indicator-color: #000;`
 - `--form-indicator-size: 1em;`
 - `--form-indicator-roundness: 50em;`

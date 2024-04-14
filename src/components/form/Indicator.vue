@@ -3,7 +3,7 @@ defineProps(['checked'])
 </script>
 
 <template>
-    <div class="wrapper">
+    <div :class="['wrapper', checked ? 'checked' : null]">
         <div :class="['indicator', checked ? 'checked' : null]"></div>
     </div>
 </template>
@@ -15,7 +15,10 @@ defineProps(['checked'])
     height: var(--form-indicator-size, 1em);
     border-radius: var(--form-indicator-roundness, 0.5em);
     border: 1px solid;
-    border-color: var(--form-border-color, inherit);
+    border-color: var(--form-indicator-border-color, inherit);
+    &.checked {
+        border-color: var(--form-indicator-border-color-checked, inherit);
+    }
 }
 
 .indicator {

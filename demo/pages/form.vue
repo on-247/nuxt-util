@@ -6,7 +6,9 @@
     --form-border-color: black;
     --form-helper-color: gray;
     --form-invalid-color: red;
-    --form-option-indicator-color: black;
+    --form-indicator-color: orange;
+    --form-indicator-border-color: purple;
+    --form-indicator-border-color-checked: orange;
 }
 </style>
 
