@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref, computed, reactive, onMounted} from 'vue';
+import {useDebounce} from '../../../composables/performance';
 
 interface Emits {
     (e: 'update:modelValue', payload: any): void;
@@ -64,6 +65,10 @@ const state: State = reactive({
     error: validationMessage
 })
 
+const reportValidity = useDebounce((target) => {
+    target?.reportValidity()
+}, 500)
+
 const onHandleFocus = (evt: any) => {
     isTyping.value = true
     // We want to report validity the native way when the user is typing
@@ -75,12 +80,12 @@ const onHandleFocus = (evt: any) => {
 const onHandleInput = (evt: any) => {
     value.value = evt.target.value
     isFilled.value = !!evt.target.value
+    reportValidity(evt.target)
     emitAll()
 }
 
 const onHandleBlur = (evt: any) => {
     isTyping.value = false
-    evt.target.reportValidity()
     // We want to add non-native validation report when not typing
     if (! evt.target.checkValidity()) {
         validationMessage.value = evt.target.validationMessage
