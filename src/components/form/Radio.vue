@@ -144,23 +144,12 @@ onBeforeUnmount(() => stop())
 .radios {
     display: flex;
     flex-direction: var(--form-radio-direction, column);
+    flex-wrap: wrap;
     gap: var(--form-spacing-y, 1.5em) var(--form-spacing-x, 1em);
     & > div {
         display: flex;
         gap: 0 var(--form-spacing-x, 1em);
         align-items: center;
-    }
-}
-
-.error-help {
-    display: flex;
-    gap: 0 var(--form-spacing-x, 1em);
-    padding: 0 0 0 var(--form-spacing-x, 1em);
-    margin: var(--form-spacing-y, 1em) 0;
-    font-size: var(--form-small-font-size, 0.8em);
-    color: var(--form-helper-color);
-    & :deep(> .icon) {
-        color: var(--form-invalid-color);
     }
 }
 </style>

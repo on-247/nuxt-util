@@ -20,9 +20,9 @@ defineProps<Props>()
 <style scoped lang="scss">
 .error-help {
     display: flex;
-    gap: 0 .5em;
+    gap: 0 var(--form-spacing-x, 1em);
     padding: 0 0 0 var(--form-spacing-x, 1em);
-    margin-top: .5em;
+    margin-top: var(--form-spacing-y, 1em);
     font-size: var(--form-small-font-size, 0.8em);
     color: var(--form-helper-color);
     & :deep(> .icon) {
