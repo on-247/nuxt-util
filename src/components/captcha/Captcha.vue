@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { useRuntimeConfig } from 'nuxt/app'
+import {onMounted, onBeforeUnmount} from 'vue'
+import {useRuntimeConfig} from 'nuxt/app'
 import CfTurnstile from './CfTurnstile.vue'
+import {useCaptcha} from '../../composables/captcha'
 
 type Appearance =
     | 'always'
@@ -34,7 +36,7 @@ interface Props {
 defineEmits<Emits>()
 defineProps<Props>()
 
-const runtimeConfig = useRuntimeConfig().public
+const config = useRuntimeConfig().public
 const captcha = useCaptcha()
 
 const onVerify = (token: string) => {
@@ -64,7 +66,7 @@ onBeforeUnmount(() => {
     <!-- Global Cf Turnstile captcha is a self sustaining compnent and doesn't need any props -->
     <cf-turnstile
         v-if="global"
-        :sitekey="sitekey || runtimeConfig.captcha.sitekey"
+        :sitekey="sitekey || config.captcha.sitekey"
         appearance="interaction-only"
         @verify="onVerify"
         @expire="onInvalid"
@@ -73,7 +75,7 @@ onBeforeUnmount(() => {
     <!-- Normal Cf Turnstile captcha has optional props -->
     <cf-turnstile
         v-else
-        :sitekey="sitekey || runtimeConfig.captcha.sitekey"
+        :sitekey="sitekey || config.captcha.sitekey"
         :appearance="appearance"
         :theme="theme"
         :lang="lang"
