@@ -1,16 +1,4 @@
-import NBTimer from '../lib/nbtimer'
 import type { GenericCallback } from '../lib/util'
-
-
-export const useNBTimer = (cb: GenericCallback, options: any) => {
-  if (!NBTimer) return (() => {})
-  return NBTimer.add(cb, options)
-}
-
-export const useNBTimerUnsubscribe = (id: string) => {
-  if (!NBTimer) return
-  NBTimer.remove(id)
-}
 
 export const useThrottle = (
   callback: GenericCallback,
