@@ -83,7 +83,7 @@ export default defineNuxtModule<NuxtUtilModuleOptions>({
 
     nuxt.options.runtimeConfig.public.icon_path = moduleOptions['icon.path']
       ? resolver.resolve(web_root, moduleOptions['icon.path'])
-      : resolver.resolve(web_root, '/app/icons');
+      : resolver.resolve(web_root, 'app/icons.ts');
 
     nuxt.hook('components:dirs', (dirs) => {
       dirs.push({
