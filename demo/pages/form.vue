@@ -8,13 +8,11 @@
     --form-invalid-color: red;
     --form-indicator-color: orange;
     --form-indicator-border-color: purple;
-    --form-indicator-border-color-checked: orange;
+    --form-indicator-border-color-checked: black;
 }
 </style>
 
 <script setup lang="ts">
-const breakpoint = useBreakpoint()
-
 const formData = ref(new FormData)
 const fields = reactive({
     name: null,
@@ -22,12 +20,6 @@ const fields = reactive({
     drink: undefined,
     meals: 'Coca Cola',
     general: undefined
-})
-
-const screen = reactive({
-    small: breakpoint.between(null, 'md'),
-    medium: breakpoint.between('md', 'lg'),
-    large: breakpoint.between('lg', null),
 })
 
 onBeforeUnmount(() => stop())
@@ -51,14 +43,12 @@ onBeforeUnmount(() => stop())
             v-model="fields.name"
             name="name"
             :min="3"
-            error-icon="alert-triangle"
         >
             Your name
         </FormInput>
         <FormInput
             name="email"
             type="email"
-            error-icon="alert-triangle"
         >
             Your e-mail
         </FormInput>

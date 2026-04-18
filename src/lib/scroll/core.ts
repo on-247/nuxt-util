@@ -1,5 +1,5 @@
 import Lenis from '@studio-freight/lenis'
-import Tempus from '../tempus'
+import Tempus from '../nbtimer'
 import {
     type GenericCallback,
     type TargetElement,

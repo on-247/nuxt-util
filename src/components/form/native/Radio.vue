@@ -95,18 +95,18 @@ onBeforeUnmount(() => stopWatchChecked())
 </script>
 
 <template>
-    <input
-        type="radio"
+  <input
+    type="radio"
 
-        v-model="radio"
+    v-model="radio"
 
-        :id="attributes?.id"
-        :name="attributes.name"
-        :value="attributes.value"
+    :id="attributes?.id"
+    :name="attributes.name"
+    :value="attributes.value"
 
-        :required="validation.required"
+    :required="validation.required"
 
-        @change="onHandleChange"
-        @invalid="onHandleInvalid"
-    />
+    @change="onHandleChange"
+    @invalid="onHandleInvalid"
+  />
 </template> 

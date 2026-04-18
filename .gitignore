@@ -25,3 +25,4 @@ dist-ssr
 *lock.json
 .env
 .nuxt
+.package-lock.json

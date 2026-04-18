@@ -7,6 +7,6 @@ const state = useCaptcha()
     <span v-else-if="state.isError">Captcha error</span>
     <span v-else-if="state.token">Captcha {{ state.token }}</span>
     <captcha
-        global
+      global
     />
 </template>

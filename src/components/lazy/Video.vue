@@ -2,8 +2,8 @@
 import { ref, onMounted } from 'vue'
 import { useLazyload } from '../../composables/lazyload'
 
-interface Emits {
-    (e: 'loaded'): void
+type Emits = {
+  (e: 'loaded'): void
 }
 
 const emit = defineEmits<Emits>()
@@ -11,25 +11,25 @@ const lazyload = useLazyload()
 const el = ref()
 
 onMounted(() => {
-    lazyload.listen(el.value, () => emit('loaded'))
+  lazyload.listen(el.value, () => emit('loaded'))
 })
 </script>
 
 <template>
-    <video
-        ref="el"
-        class="lazy"
-    >
-        <slot />
-    </video>
+  <video
+    ref="el"
+    class="lazy"
+  >
+    <slot />
+  </video>
 </template>
 
 <style scoped lang="scss">
 video {
-    opacity: 0;
-    transition: all var(--lazyload-duration, .4s) var(--lazyload-easing, ease);
-    &.loaded {
-        opacity: 1;
-    }
+  opacity: 0;
+  transition: all var(--lazyload-duration, .4s) var(--lazyload-easing, ease);
+  &.loaded {
+    opacity: 1;
+  }
 }
 </style>

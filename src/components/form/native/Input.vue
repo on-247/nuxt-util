@@ -111,21 +111,21 @@ onMounted(() => emitAll())
 </script>
 
 <template>
-    <component
-        :is="getVariant"
+  <component
+    :is="getVariant"
 
-        :type="attributes.type"
-        :id="attributes.id"
-        :name="attributes.name"
-        :value="value"
+    :type="attributes.type"
+    :id="attributes.id"
+    :name="attributes.name"
+    :value="value"
 
-        :required="validation.required"
-        :min="validation.min"
-        :max="validation.max"
+    :required="validation.required"
+    :min="validation.min"
+    :max="validation.max"
 
-        @focus="onHandleFocus"
-        @input="onHandleInput"
-        @blur="onHandleBlur"
-        @invalid="onHandleInvalid"
-    />
+    @focus="onHandleFocus"
+    @input="onHandleInput"
+    @blur="onHandleBlur"
+    @invalid="onHandleInvalid"
+  />
 </template>

@@ -1,11 +1,11 @@
 body::before {
-    display: none;
+  display: none;
 }
 
 @media (min-width: 0px) {
-    body::before {
-        content: 'xs';
-    }
+  body::before {
+    content: 'xs';
+  }
 }
 
 @media (min-width: 640px) {

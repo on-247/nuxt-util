@@ -1,4 +1,4 @@
-import Tempus from '../tempus'
+import Tempus from '../nbtimer'
 import { type GenericCallback, clamp } from '../util'
 
 interface IntersectProgressValues {

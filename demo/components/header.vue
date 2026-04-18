@@ -1,5 +1,21 @@
+<script setup lang="ts">
+</script>
+
 <template>
     <header style="padding:20px;">
+        <div :style="{display: 'flex', alignItems: 'center', marginBottom: '2rem'}">
+            <div class="flex flex-col">
+               <div>Light</div>
+                <div>up&lt;it&lt;</div>
+                <div>.store</div>
+            </div>
+
+            <ImageLazy
+                data-src="/logo-anim.gif"
+                height="64"
+            />
+        </div>
+
         <nav :class="['flex', {'is-mobile': $breakpoint.between('xs', 'md')}]">
             <router-link to="/" style="display: block;">Home</router-link>
             <router-link to="/breakpoint" style="display: block;">Breakpoint</router-link>
@@ -8,8 +24,8 @@
             <router-link to="/lazyload" style="display: block;">Lazyload</router-link>
             <router-link to="/scroll" style="display: block;">Scroll</router-link>
             <router-link to="/captcha" style="display: block;">Captcha</router-link>
-            <router-link to="/credit" style="display: block;">Credit</router-link>
             <router-link to="/form" style="display: block;">Form</router-link>
+            <router-link to="/modal" style="display: block;">Modal</router-link>
         </nav>
     </header>
 </template>
