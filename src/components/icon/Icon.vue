@@ -1,21 +1,25 @@
 <script lang="ts" setup>
 import { type ComputedRef } from 'vue';
 import { type SVGAttributes } from 'vue';
+import { ref } from 'vue';
 import { computed } from 'vue';
 import { onMounted } from 'vue';
 import { useRuntimeConfig } from 'nuxt/app';
 import helpCircle from './helpCircle.json';
+import { useLogger } from '../../composables/debug';
+
+const LOG = useLogger()
 
 var icons = {};
 var icon_path = useRuntimeConfig().public.icon_path
 try {
   /** @ts-ignore */
-  console.info(`Importing ${icon_path}`)
+  LOG.info(`Importing ${icon_path}`)
   icons = await import(/* @vite-ignore */icon_path);
 }
 catch(e) {
-  useLogError(`Error encountered: ${String(e)}`);
-  useLog(`Icon template file at ${icon_path} could not be loaded`);
+  LOG.error(`Error encountered: ${String(e)}`);
+  LOG.warn(`Icon template file at ${icon_path} could not be loaded`);
 }
 
 type Props = {

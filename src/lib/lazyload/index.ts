@@ -48,6 +48,7 @@ export class Lazy {
   }
 
   private removeListener(loadedEl: Element) {
+    /** @TODO implement splice splice */
     this.listeners = this.listeners.filter(({el}) => el !== loadedEl)
   }
 }

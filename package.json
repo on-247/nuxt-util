@@ -1,5 +1,5 @@
 {
-    "name": "@on-247/nuxti",
+    "name": "@on-247/nuxt-util",
     "private": true,
     "version": "0.1.0",
     "type": "module",
@@ -17,14 +17,17 @@
         "nuxt": "^4.0.0"
     },
     "devDependencies": {
+        "@nuxt/kit": "^4.4.2",
         "@nuxtjs/tailwindcss": "^6.14.0",
+        "nuxt": "^4.4.2",
         "sass": "^1.62.1",
-        "typescript": "^5.1.6"
+        "typescript": "^5.1.6",
+        "vue": "^3.5.32",
+        "vue-router": "^5.0.4"
     },
     "dependencies": {
-        "@nuxt/kit": "^4.0.0",
-        "@studio-freight/lenis": "^1.0.11",
         "browser-detect": "^0.2.28",
+        "D": "^1.0.0",
         "date-fns": "^4.1.0",
         "ulid": "^3.0.2",
         "vanilla-lazyload": "^17.8.3"

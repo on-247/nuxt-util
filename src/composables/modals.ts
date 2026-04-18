@@ -1,9 +1,14 @@
-import { ulid } from 'ulid'
+import { ulid } from 'ulid';
+import { h } from 'vue';
+import { reactive } from 'vue';
+import { resolveComponent } from 'vue';
+import { useLogger } from '../composables/debug';
 
 type ComponentID = string
 type Component = any
 type RenderID = string
 
+const log = useLogger()
 let registerdModals: Record<ComponentID, Component> = {}
 let renderedModals: Record<RenderID, () => Component> = reactive({})
 
@@ -27,7 +32,7 @@ export const useModalRegister = (modals: string[]) => {
 
 export const useModalActivate = (id: ComponentID, data?: any) => {
   if (!(id in registerdModals)) {
-    return useLogError('Registered modal not found: ', id)
+    return log.error('Registered modal not found: ', id)
   }
   let renderId = ulid()
   let renderFunction = () => h(

@@ -1,7 +1,7 @@
 import { ref, type Ref} from 'vue'
 import { isClient } from '../util'
 
-/** Breakpoints */
+/** Breakpoint names */
 export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 
 /** Arguments needed for creating a getter for a range of breakpoints */
@@ -22,7 +22,8 @@ const breakpointWidths: Record<Breakpoint, number> = {
 
 export const ww = ref(isClient ? window.innerWidth : breakpointWidths.xl)
 
-/** Reads the current breakpoint from the document's body psuedo CSS value */
+/** Reads the current breakpoint from the injected pseudo
+ * css value in the document's styling. */
 export const getBreakpoint = () => {
   if (!isClient) return 'xl'
   let currentBreakpoint = window.getComputedStyle(

@@ -55,6 +55,7 @@ const components: [string, string][] = [
   ['NativeInput', './components/form/native/Input.vue'],
   ['NativeCheckbox', './components/form/native/Checkbox.vue'],
   ['ModalRenderer', './components/modal/Renderer.vue'],
+  ['ModalContext', './components/modal/Context.vue'],
 ]
 
 export default defineNuxtModule<NuxtUtilModuleOptions>({
@@ -66,34 +67,29 @@ export default defineNuxtModule<NuxtUtilModuleOptions>({
     },
   },
   async setup(moduleOptions, nuxt) {
-    const src_path = __dirname
+    /** @ts-ignore */
+    var src_path = __dirname;
     var installation_mode = src_path.includes('node_modules');
-    var root = (installation_mode
-      ? src_path.split('/node_modules')
-      : src_path.split('/src')
-    ).shift() + (installation_mode ? '/app' : '');
+    var root = (installation_mode ? src_path.split('/node_modules') : src_path.split('/src')).shift();
     var web_root = '/_nuxt/@fs' + root;
+    var resolver = createResolver(src_path);
 
-    console.info(`nuxt-util webroot: ${web_root}`);
-
-    const resolver = createResolver(src_path)
     if ('captcha.sitekey' in moduleOptions) {
       nuxt.options.runtimeConfig.public.captcha = {
+        /** @ts-ignore */
         sitekey: moduleOptions['captcha.sitekey']
       }
     }
 
     nuxt.options.runtimeConfig.public.icon_path = moduleOptions['icon.path']
       ? resolver.resolve(web_root, moduleOptions['icon.path'])
-      : resolver.resolve(web_root, '/icons')
+      : resolver.resolve(web_root, '/app/icons');
 
     nuxt.hook('components:dirs', (dirs) => {
       dirs.push({
         path: resolver.resolve(
           root,  // @ts-ignore
-          'modal.path' in moduleOptions
-          ? moduleOptions['modal.path']
-          : 'components/modals'
+          moduleOptions['modal.path'] ? moduleOptions['modal.path'] : 'app/modals'
         ),
         global: true,
         prefix: 'Modals',
