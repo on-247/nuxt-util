@@ -2,7 +2,7 @@
   <ClientOnly>
     <Header />
     <main style="padding:0 20px;">
-      <slot />
+      <NuxtPage />
     </main>
     <Footer />
   </ClientOnly>

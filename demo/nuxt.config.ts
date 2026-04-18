@@ -3,10 +3,10 @@ export default defineNuxtConfig({
   ssr: false,
   modules: [
     '@nuxtjs/tailwindcss',
-    ['../src/module', {
+    ['../src/module', { // @ts-ignore
       'captcha.sitekey': process.env.CAPTCHA_SITEKEY,
-      'icon.path': 'demo/icons.ts',
-      "modal.path": 'demo/modals'
+      'icon.path': 'demo/app/icons.ts',
+      "modal.path": 'demo/app/modals'
     }]
   ],
   sourcemap: false,
@@ -23,6 +23,7 @@ export default defineNuxtConfig({
         'ulid',
         'vanilla-lazyload',
       ]
-    }
-  }
+    },
+    cacheDir: './.cache'
+  },
 })
