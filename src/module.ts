@@ -66,12 +66,11 @@ export default defineNuxtModule<NuxtUtilModuleOptions>({
     },
   },
   async setup(moduleOptions, nuxt) {
-    const src_path = import.meta.url
-    const src_path_1 = String(src_path).replace('file:///', '/')
+    const src_path = __dirname
     var installation_mode = src_path.includes('node_modules');
     var root = (installation_mode
-      ? src_path_1.split('/node_modules')
-      : src_path_1.split('/src')
+      ? src_path.split('/node_modules')
+      : src_path.split('/src')
     ).shift() + (installation_mode ? '/app' : '');
     var web_root = '/_nuxt/@fs' + root;
 
