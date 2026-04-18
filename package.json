@@ -11,7 +11,7 @@
     "module": "src/module.ts",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/CodeAdraas/nuxterplate.git"
+        "url": "git+https://github.com/on-247/nuxt-util.git"
     },
     "peerDependencies": {
         "nuxt": "^4.0.0"
