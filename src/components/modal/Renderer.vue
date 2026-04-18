@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const rendered = useModalRender()
+import { useModalRender } from '../../composables/modals';
+import { useModalDeactivate } from '../../composables/modals';
+const rendered = useModalRender();
 </script>
 
 <template>
