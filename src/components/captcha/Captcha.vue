@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import {onMounted} from 'vue';
-import {onBeforeUnmount} from 'vue';
-import {useRuntimeConfig} from 'nuxt/app';
+import { onMounted } from 'vue';
+import { onBeforeUnmount } from 'vue';
+import { useRuntimeConfig } from 'nuxt/app';
 import CfTurnstile from './CfTurnstile.vue';
-import {useCaptcha} from '../../composables/captcha';
+import { useCaptcha } from '../../composables/captcha';
+import { useLogger } from '../../composables/debug';
+
+const LOG = useLogger();
 
 type Appearance = 'always' | 'execute' | 'interaction-only';
 type Theme = 'auto' | 'light' | 'dark';
@@ -26,50 +29,38 @@ defineEmits<Emits>();
 const prop = defineProps<Props>();
 const config = useRuntimeConfig().public;
 const captcha = useCaptcha();
-const onVerify = (token: string) => {
+const onVerify = (token?: string) => {
+  LOG.debug('[CAPTCHA]', 'Verifying...');
   captcha.isVerifying = false;
   captcha.isError = false;
-  captcha.token = token;
+  (token && (captcha.token = token));
 };
 const onInvalid = () => {
+  LOG.debug('[CAPTCHA]', 'Invalid');
   captcha.isVerifying = false;
   captcha.isError = true;
   captcha.token = null;
 }
 onMounted(() => {
   if (prop.sitekey || config.captcha.sitekey) {
-    captcha.isVerifying = true;
-    captcha.isError = false;
+    onVerify();
     return;
   }
-  var e = '[CAPTCHA] Turnstile sitekey missing';
-  useLogError('[CAPTCHA]', e);
+  LOG.warn('[CAPTCHA]', 'Turnstile sitekey missing');
   onInvalid();
 });
-onBeforeUnmount(() => {
-  captcha.isVerifying = true;
-  captcha.isError = false;
-});
+onBeforeUnmount(() => onVerify());
 </script>
 
 <template>
-  <cf-turnstile
-    v-if="global"
+  <CfTurnstile
     :sitekey="sitekey || config.captcha.sitekey"
-    appearance="interaction-only"
-    @verify="onVerify"
-    @expire="onInvalid"
-    @fail="onInvalid"
-  />
-  <cf-turnstile
-    v-else
-    :sitekey="sitekey || config.captcha.sitekey"
-    :appearance="appearance"
+    :appearance="global ? 'interaction-only' : appearance"
     :theme="theme"
     :lang="lang"
     :form-field-name="fieldName"
-    @verify="token => $emit('verify', token)"
-    @expire="$emit('expire')"
-    @fail="$emit('fail')"
+    @verify="token => (onVerify(token), $emit('verify', token))"
+    @expire="(onInvalid(), $emit('expire'))"
+    @fail="(onInvalid(), $emit('fail'))"
   />
 </template>
