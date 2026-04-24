@@ -3,3 +3,4 @@ tsconfig.json
 .gitignore
 .git
 .package-lock.json
+biome.json
