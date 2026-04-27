@@ -93,14 +93,15 @@ export function get_week(obj: Date | number) {
   const year = date.getFullYear();
   const jan1 = set(new Date, {y: year, mth: 0, d: 1, h: 4, m: 0, s: 0, ms: 0 });
   const jan1_wd = jan1.getDay() == 0 ? 7 : jan1.getDay(); // @ts-ignore
+  const dec31 = set(new Date, {y: year, mth: 11, d: 31, h: 4, m: 0, s: 0, ms: 0 });
+  const dec31_wd = dec31.getDay() == 0 ? 7 : dec31.getDay(); // @ts-ignore
   var year_day = MTH_TO_DAYS[date.getMonth() - 1] + date.getUTCDate();
   year_day += jan1_wd > 4 ? 6 - jan1_wd : jan1_wd - 1
-  var is_leap = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)
-  if (is_leap) {
+  if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
     year_day += 1;
   }
   var rw = Math.ceil(year_day / 7);
-  return rw == 53 && !is_leap ? 1 : rw;
+  return rw == 53 && dec31_wd < 4 ? 1 : rw;
 }
 
 export class Day {
