@@ -17,9 +17,15 @@ export function adjust(d1: Date, options: any) {
 	if ("ms" in options) {
 		d1.setMilliseconds(d1.getMilliseconds() + options.ms);
 	}
-  if ("d" in options) {
+  if ('y' in options) {
+		d1.setFullYear(d1.getFullYear() + options.y);
+  }
+  if ('mth' in options) {
+		d1.setMonth(d1.getMonth() + options.mth);
+  }
+  if ('d' in options) {
 		d1.setDate(d1.getDate() + options.d);
-	}
+  }
 	return d1;
 }
 
@@ -73,12 +79,28 @@ export function same_date(d1: Date, d2: Date) {
 	return d1.getMonth() == d2.getMonth() && d1.getDate() == d2.getDate();
 }
 
-function get_week(obj: Date | number) {
-  if (typeof obj === 'number') {
-    // [1]
+const MTH_TO_DAYS: number[] = [
+  31, 59, 90,
+  120, 151, 181,
+  212, 243, 273,
+  304, 334, 365
+];
+
+MTH_TO_DAYS[-1] = 0;
+
+export function get_week(obj: Date | number) {
+  var date = to_date(obj);
+  const year = date.getFullYear();
+  const jan1 = set(new Date, {y: year, mth: 0, d: 1, h: 4, m: 0, s: 0, ms: 0 });
+  const jan1_wd = jan1.getDay() == 0 ? 7 : jan1.getDay(); // @ts-ignore
+  var year_day = MTH_TO_DAYS[date.getMonth() - 1] + date.getUTCDate();
+  year_day += jan1_wd > 4 ? 6 - jan1_wd : jan1_wd - 1
+  var is_leap = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)
+  if (is_leap) {
+    year_day += 1;
   }
-  // [2]
-  return 1
+  var rw = Math.ceil(year_day / 7);
+  return rw == 53 && !is_leap ? 1 : rw;
 }
 
 export class Day {
@@ -150,7 +172,7 @@ export class Day {
 	}
 
   get week() {
-    return get_week(this.min * 1000);
+    return get_week(this.min);
   }
 
   get date_() {
@@ -217,10 +239,10 @@ export class Week {
 	}
 
 	day(index: number) {
-		if (1 < index && index > 7) {
+		let day = this._days[index];
+		if (1 < index && index > 7 || !day) {
 			throw new Error(`[${MOD_NAME}] Day index ${index} out of range`);
 		}
-		let day = this._days[index];
 		return day;
 	}
 
@@ -256,19 +278,16 @@ export class Week {
 		return new Week(clone(this.max.next().date));
 	}
 
-	/** @UNCOVERED */
 	*[Symbol.iterator]() {
 		for (const day of Object.values(this._days)) {
 			yield day;
 		}
 	}
 
-	/** @UNCOVERED */
 	offset(offset: number) {
 		return Object.values(this._days).slice(offset);
 	}
 
-	/** @UNCOVERED */
 	contains(d1: Date) {
 		for (var day of Object.values(this._days)) {
 			if (same_date(d1, day.date)) {
@@ -277,6 +296,16 @@ export class Week {
 		}
 		return false;
 	}
+
+  /** @UNCOVERED */
+  replace(nw: Week) {
+    var counter = 1;
+    for (const day of nw) {
+      this._days[counter] = day;
+      counter++;
+    }
+    this._number = nw.number;
+  }
 }
 
 export class Month {
@@ -428,6 +457,7 @@ export class Month {
 		};
 	}
 
+  /** @UNCOVERED */
 	get today() {
 		for (let week of this._weeks) {
 			try {
@@ -439,6 +469,7 @@ export class Month {
 		throw new Error(`[${MOD_NAME}] Today not inside month context`);
 	}
 
+  /** @UNCOVERED */
 	get name() {
 		var names: any = {
 			0: "Jan",
@@ -458,45 +489,14 @@ export class Month {
 	}
 
 	prev(): Month {
-		let m = new Month(undefined, { init: false });
-		let shared_week = this._weeks[0];
-		if (shared_week == null) {
-			throw new Error(`[${MOD_NAME}] Value error: no weeks`);
-		}
-		if (
-			shared_week.min.month !== this.index &&
-			shared_week.max.month === this.index
-		) {
-      m.index = shared_week.min.month;
-			m.init({ week: shared_week });
-		} else {
-      var r = this.min.prev().date;
-      m.index = r.getMonth();
-			m.init({ relative: this.min.prev().date });
-		}
-		return m;
+    return new Month(clone(this.min.prev().date));
 	}
 
 	next(): Month {
-		let m = new Month(undefined, { init: false });
-		let shared_week = this._weeks[this._weeks.length - 1];
-		if (shared_week == null) {
-			throw new Error(`[${MOD_NAME}] Value error: no weeks`);
-		}
-		if (
-			shared_week.min.month === this.index &&
-			shared_week.max.month !== this.index
-		) {
-      m.index = shared_week.max.month;
-			m.init({ week: shared_week });
-		} else {
-      let r = this.max.prev().date;
-      m.index = r.getMonth();
-			m.init({ relative: this.max.prev().date });
-		}
-		return m;
+    return new Month(clone(this.max.next().date));
 	}
 
+  /** @UNCOVERED */
 	get days() {
 		if (!this._days.length) {
 			this._days = this._weeks.map((w) => [...w]).flat();
@@ -504,13 +504,23 @@ export class Month {
 		return this._days;
 	}
 
+  /** @UNCOVERED */
 	week(index = 0) {
 		return this._weeks[index];
 	}
 
+  /** @UNCOVERED */
 	day(index = 0) {
 		return this.days[index];
 	}
+
+  /** @UNCOVERED */
+  replace(nm: Month) {
+    this._weeks.splice(0);
+    this._weeks.push(...nm._weeks);
+    this.index = nm.index;
+    this._days.splice(0);
+  }
 }
 
 const Y = (new Date).getFullYear();
@@ -523,6 +533,7 @@ export class Quarter {
     months.push(new Month(set(new Date, { y: pointer.min.year, mth: pointer.min.month + 2 })));
   }
 
+  /** @UNCOVERED */
   static current() {
     var pointer = new Date;
     var index = pointer.getMonth();
@@ -551,6 +562,7 @@ export class Quarter {
     return new Quarter(months);
   }
 
+  /** @UNCOVERED */
   get year() {
     return this._months.at(0)?.min.year || 0;
   }
@@ -581,6 +593,7 @@ export class Quarter {
     return obj.max;
   }
 
+  /** @UNCOVERED */
   get month() {
     var def = this._months[0];
     var NOW_MONTH = (new Date).getMonth();
@@ -596,6 +609,7 @@ export class Quarter {
     return def;
   }
 
+  /** @UNCOVERED */
   prev() {
     var touch = this.min?.prev() || new Day();
     if (touch.year !== this.min?.year) {
@@ -605,6 +619,7 @@ export class Quarter {
     return new Quarter([new Month(p)]);
   }
 
+  /** @UNCOVERED */
   next() {
     var touch = this.max?.next() || new Day();
     if (touch.year !== this.max?.year) {
@@ -614,6 +629,7 @@ export class Quarter {
     return new Quarter([new Month(p)])
   }
 
+  /** @UNCOVERED */
   includes(month: Month) {
     if (month.year !== this.year) {
       return false;

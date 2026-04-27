@@ -1,5 +1,11 @@
-import { run_test, assert } from "./util";
-import { set, Day, Week, Month, Quarter } from "../src/lib/time";
+import { run_test } from "./util";
+import { assert } from "./util";
+import { adjust,} from "../src/lib/time";
+import { set } from "../src/lib/time";
+import { Day } from "../src/lib/time";
+import { Week } from "../src/lib/time";
+import { Month } from "../src/lib/time";
+import { Quarter } from "../src/lib/time";
 
 const DAY_TS = 1769382000; // midnight
 const DAY_RTS = 1769426526;
@@ -79,6 +85,31 @@ function test_week_next_and_prev() {
 	assert.equal(week.next().number, 34);
 }
 
+function test_week_iterator() {
+  let week = new Week();
+  for (const [i, day] of Array.from(week).entries()) {
+    if (i == 0)
+      assert.describe('First weekday').equal(day.name, 'ma');
+    if (i == 6)
+      assert.describe('Last weekday').equal(day.name, 'zo');
+  }
+}
+
+function test_week_offset() {
+  let week = new Week();
+  let slice = week.offset(0);
+  assert.describe('Should be monday').equal(slice[0].name, 'ma');
+  slice = week.offset(2);
+  assert.describe('Should be wednesday').equal(slice[0].name, 'wo');
+}
+
+function test_week_contains() {
+  let week = new Week();
+  assert.equal(true, week.contains(new Date));
+  var foreign_date = adjust(new Date, { mth: 1 });
+  assert.equal(false, week.contains(foreign_date));
+}
+
 function test_month_min_max() {
 	/**
 	 * Test minimum date and maximum date of a Month object
@@ -120,6 +151,8 @@ function test_month_next_and_prev() {
 	assert.describe('4').equal(oct.next().max.ts, nov.max.ts);
 }
 
+function test_month_iterator() {}
+
 function test_quarter() {
   let q1 = Quarter.q1();
   let q4 = Quarter.q4();
@@ -138,6 +171,9 @@ run_test(test_day_next_and_prev);
 run_test(test_week_min_max);
 run_test(test_week_num);
 run_test(test_week_next_and_prev);
+run_test(test_week_iterator);
+run_test(test_week_offset);
+run_test(test_week_contains);
 run_test(test_month_find_weeks_recursive);
 run_test(test_month_min_max);
 run_test(test_month_next_and_prev);
