@@ -172,7 +172,7 @@ export class Day {
 	}
 
   get week() {
-    return get_week(this.min);
+    return get_week(this.min + 7200);
   }
 
   get date_() {

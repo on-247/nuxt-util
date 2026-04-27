@@ -14,7 +14,6 @@ var icons = {};
 var icon_path = useRuntimeConfig().public.icon_path
 try {
   /** @ts-ignore */
-  LOG.info(`Importing ${icon_path}`)
   icons = await import(/* @vite-ignore */icon_path);
 }
 catch(e) {
