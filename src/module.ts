@@ -32,12 +32,9 @@ declare module 'vue' {
 }
 
 type NuxtUtilModuleOptions = {
-  icon_path?: string;
-  iconPath?: string;
   'icon.path'?: string;
-  modal_path?: string;
-  modalPath?: string;
   'modal.path'?: string;
+  debug?: true;
 }
 
 
@@ -73,6 +70,10 @@ export default defineNuxtModule<NuxtUtilModuleOptions>({
     var root = (installation_mode ? src_path.split('/node_modules') : src_path.split('/src')).shift();
     var web_root = '/_nuxt/@fs' + root;
     var resolver = createResolver(src_path);
+
+    if ('debug' in moduleOptions) {
+      nuxt.options.runtimeConfig.public.debug = true
+    }
 
     if ('captcha.sitekey' in moduleOptions) {
       nuxt.options.runtimeConfig.public.captcha = {

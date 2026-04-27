@@ -1,6 +1,15 @@
+import { useRuntimeConfig } from 'nuxt/app';
+
 const logger = {
+  /** @deprecated */
   log(...objs: any[]) {
-    console.log('[DEBUG] ', ...objs)
+    console.log('[DEBUG] (deprecated) ', ...objs)
+  },
+  debug(...objs: any[]) {
+    if (!useRuntimeConfig().public?.debug) {
+      return;
+    }
+    console.debug('[DEBUG]', ...objs)
   },
   info(...objs: any[]) {
     console.log('[INFO] ', ...objs)
