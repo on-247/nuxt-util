@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { clone, set, get_week, Week } = useTime();
+const { clone, set, Week } = useTime();
 var week = reactive(new Week());
 const func = {
   set_year(year: number) {
@@ -44,7 +44,7 @@ const func = {
           @click=""
         >
           {{ day.name }} {{ day.date_ }}
-          <div v-if="i == 0" class="opacity-40">{{ get_week(day.max)}}</div>
+          <div v-if="i == 0" class="opacity-40">{{ day.week }}</div>
         </div>
       </div>
     </div>
