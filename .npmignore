@@ -4,3 +4,6 @@ tsconfig.json
 .git
 .package-lock.json
 biome.json
+.test
+.vscode
+README.md
