@@ -1,4 +1,15 @@
 const MOD_NAME = "BACKEND/TIME";
+const Y = (new Date).getFullYear();
+const M = (new Date).getMonth();
+const MTH_TO_DAYS: number[] = [
+  31, 59, 90,
+  120, 151, 181,
+  212, 243, 273,
+  304, 334, 365
+];
+
+MTH_TO_DAYS[-1] = 0;
+
 
 export function clone(d1: Date) {
 	return new Date(d1.getTime());
@@ -79,15 +90,6 @@ export function same_date(d1: Date, d2: Date) {
 	return d1.getMonth() == d2.getMonth() && d1.getDate() == d2.getDate();
 }
 
-const MTH_TO_DAYS: number[] = [
-  31, 59, 90,
-  120, 151, 181,
-  212, 243, 273,
-  304, 334, 365
-];
-
-MTH_TO_DAYS[-1] = 0;
-
 export function get_week(obj: Date | number) {
   var date = to_date(obj);
   const year = date.getFullYear();
@@ -103,6 +105,8 @@ export function get_week(obj: Date | number) {
   var rw = Math.ceil(year_day / 7);
   return rw == 53 && dec31_wd < 4 ? 1 : rw;
 }
+
+const W = get_week(new Date);
 
 export class Day {
 	date: Date;
@@ -160,6 +164,7 @@ export class Day {
 		}
 	}
 
+  /** @deprecated */
 	get is_today() {
 		return to_ts(set(new Date, { h: 0, m: 0, s: 0, ms: 0 })) == this.ts;
 	}
@@ -188,7 +193,12 @@ export class Day {
 		return Day.from_ts(this.max + (7200 * 2));
 	}
 
+  /** @deprecated */
 	matches(day: Date | Day | number) {
+    return this.includes(day);
+	}
+
+  includes(day: Date | Day | number) {
     if (day instanceof Date) {
       var c = clone(day);
       set(c, { h: 0, m: 0, s: 0, ms: 0 });
@@ -202,7 +212,11 @@ export class Day {
       ? console.log(`[${MOD_NAME}]`, this.min, '!=', day.min)
       : console.log(`[${MOD_NAME}]`, this.min, '==', day.min);
 		return day.min == this.min;
-	}
+  }
+
+  get is_current() {
+		return to_ts(set(new Date, { h: 0, m: 0, s: 0, ms: 0 })) == this.ts;
+  }
 }
 
 export class Week {
@@ -261,14 +275,12 @@ export class Week {
 				return day;
 			}
 		}
-		throw new Error(`[${MOD_NAME}] Today not inside week context`);
+  
+    throw new Error(`[${MOD_NAME}] Today not inside week context`);
 	}
 
 	get number() {
-		if (this._number) {
-			return this._number;
-		}
-		return (this._number = get_week(this.min.date));
+		return !this._number ? (this._number = get_week(this.min.max)) : this._number;
 	}
 
 	prev() {
@@ -289,7 +301,13 @@ export class Week {
 		return Object.values(this._days).slice(offset);
 	}
 
+  /** @deprecated */
 	contains(d1: Date) {
+		return this.includes(d1);
+	}
+
+  /** @UNCOVERED */
+	includes(d1: Date) {
 		for (var day of Object.values(this._days)) {
 			if (same_date(d1, day.date)) {
 				return true;
@@ -307,11 +325,16 @@ export class Week {
     }
     this._number = nw.number;
   }
+
+  /** @UNCOVERED */
+  get is_current() {
+    return this.number == W;
+  }
 }
 
 export class Month {
-	_weeks: Week[];
 	index: number;
+	_weeks: Week[];
 	_days: Day[] = [];
 
 	constructor(relative: Date = new Date(), options = { init: true }) {
@@ -522,9 +545,13 @@ export class Month {
     this.index = nm.index;
     this._days.splice(0);
   }
+
+  /** @UNCOVERED */
+  get is_current() {
+    return this.index == M && this.year == Y;
+  }
 }
 
-const Y = (new Date).getFullYear();
 export class Quarter {
   _months: Month[];
   constructor(months: Month[]) {
@@ -610,6 +637,13 @@ export class Quarter {
     return def;
   }
 
+	/** @UNCOVERED */
+	*[Symbol.iterator]() {
+		for (let month of this._months) {
+			yield month;
+		}
+	}
+
   /** @UNCOVERED */
   prev() {
     var touch = this.min?.prev() || new Day();
@@ -641,5 +675,21 @@ export class Quarter {
       throw new Error('Invalid quarter');
     }
     return month.index >= zero.index && month.index <= minus_one.index;
+  }
+
+  /** @UNCOVERED */
+  replace(nq: Quarter) {
+    this._months.splice(0);
+    this._months.push(...nq._months);
+  }
+
+  /** @UNCOVERED */
+  get is_current() {
+    for (const month of this._months) {
+      if (month.index == M && month.year == Y) {
+        return true;
+      }
+    }
+    return false;
   }
 }

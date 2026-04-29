@@ -22,24 +22,24 @@ MID_OCT.setFullYear(2025);
 function test_day() {
 	let d = Day.from_ts(DAY_RTS);
 	assert.describe('Day name').equal(d.name, DAY_NAME);
-	assert.describe('Should not be today').equal(d.is_today, false);
+	assert.describe('Should not be today').equal(d.is_current, false);
 	assert.describe('Day TS at midnight').equal(d.ts, DAY_TS);
 	assert.describe('min == ts').equal(d.min, d.ts);
 	assert.describe('Day TS before midnight').equal(d.max, DAY_TS + Day.HOURS - 1);
 }
 
-function test_day_is_today() {
+function test_day_is_current() {
 	let d = new Day();
-	assert.describe('Is today').equal(d.is_today, true);
+	assert.describe('Is current day').equal(d.is_current, true);
 }
 
-function test_day_matches() {
+function test_day_includes() {
 	let d = Day.from_ts(DAY_RTS);
-  assert.describe('Date object').equal(d.matches(new Date(DAY_RTS * 1000)), true);
-  assert.describe('Real TS').equal(d.matches(DAY_RTS), true);
-  assert.describe('Day TS').equal(d.matches(DAY_TS), true);
-  assert.describe('Day TS prev day').equal(d.matches(DAY_TS - Day.HOURS), false);
-  assert.describe('Day TS next day').equal(d.matches(DAY_TS + Day.HOURS), false);
+  assert.describe('Date object').equal(d.includes(new Date(DAY_RTS * 1000)), true);
+  assert.describe('Real TS').equal(d.includes(DAY_RTS), true);
+  assert.describe('Day TS').equal(d.includes(DAY_TS), true);
+  assert.describe('Day TS prev day').equal(d.includes(DAY_TS - Day.HOURS), false);
+  assert.describe('Day TS next day').equal(d.includes(DAY_TS + Day.HOURS), false);
 }
 
 function test_day_next_and_prev() {
@@ -165,8 +165,8 @@ function test_quarter() {
 }
 
 run_test(test_day);
-run_test(test_day_is_today);
-run_test(test_day_matches);
+run_test(test_day_is_current);
+run_test(test_day_includes);
 run_test(test_day_next_and_prev);
 run_test(test_week_min_max);
 run_test(test_week_num);
